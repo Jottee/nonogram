@@ -29,63 +29,77 @@ public class PuzzleScreen2 extends JFrame {
         getContentPane().add(optionsPanel);
         getContentPane().add(puzzlePanel);
         optionsPanel.setBackground(Color.green);
-        puzzlePanel.setBackground(Color.red);
+        puzzlePanel.setBackground(Color.lightGray);
         optionsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         //test gbag
         JPanel testGBag = new JPanel(new GridBagLayout());
-        testGBag.setBackground(Color.pink);
-        optionsPanel.add(testGBag);
+        testGBag.setBackground(Color.lightGray);
+        puzzlePanel.add(testGBag);
 
-        JLabel gBagLabel = new JLabel("This be a gbag!");
-        testGBag.add(gBagLabel);
+        createPuzzleField(testGBag, 15, 25);
+    }
 
-        JButton button;
-        GridBagConstraints c = new GridBagConstraints();
-
-//        button = new JButton("Button 1");
-//        c.weightx = 0.5;
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.gridx = 0;
-//        c.gridy = 0;
-//        testGBag.add(button, c);
-//
-//        button = new JButton("Button 2");
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.weightx = 0.5;
-//        c.gridx = 1;
-//        c.gridy = 0;
-//        testGBag.add(button, c);
-//
-//        button = new JButton("Button 3");
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.weightx = 0.5;
-//        c.gridx = 2;
-//        c.gridy = 0;
-//        testGBag.add(button, c);
-
+    public void createPuzzleField(JPanel testGBag, int rows, int cols) {
+        GridBagConstraints cMid = new GridBagConstraints();
         JPanel midPanel = new JPanel();
-        midPanel.setBackground(Color.blue);
-        //c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipady = 100;      //make this component tall
-        c.ipadx = 120;
-        c.weightx = 0.0;
-        c.gridwidth = 5;
-        c.gridheight = 6;
-        c.gridx = 1;
-        c.gridy = 1;
-        testGBag.add(midPanel, c);
+        midPanel.setBackground(Color.white);
+        cMid.ipady = rows * 17;
+        cMid.ipadx =  cols * 17;
+        cMid.weightx = 0.0;
+        cMid.weighty = 0.0;
+        cMid.gridwidth = 1;
+        cMid.gridheight = 1;
+        cMid.gridx = 1;
+        cMid.gridy = 1;
+        cMid.fill = cMid.BOTH;
+        testGBag.add(midPanel, cMid);
 
-//        button = new JButton("5");
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.ipady = 0;       //reset to default
-//        c.weighty = 1.0;   //request any extra vertical space
-//        c.anchor = GridBagConstraints.PAGE_END; //bottom of space
-//        c.insets = new Insets(10,0,0,0);  //top padding
-//        c.gridx = 6;       //aligned with button 2
-//        c.gridwidth = 2;   //2 columns wide
-//        c.gridy = 2;       //third row
-//        testGBag.add(button, c);
+        GridBagConstraints cTop = new GridBagConstraints();
+        JPanel topPanel = new JPanel();
+        topPanel.setBackground(Color.orange);
+        cTop.ipady = 0;
+        cTop.ipadx = 0;
+        cTop.weightx = 0.0;
+        cTop.weighty = 0.0;
+        cTop.gridwidth = 1;
+        cTop.gridheight = 1;
+        cTop.gridx = 1;
+        cTop.gridy = 0;
+        testGBag.add(topPanel, cTop);
+
+        GridBagConstraints cLeft = new GridBagConstraints();
+        JPanel leftPanel = new JPanel();
+        leftPanel.setBackground(Color.yellow);
+        cLeft.ipady = 0;
+        cLeft.ipadx = 0;
+        cLeft.weightx = 0.0;
+        cLeft.weighty = 0.0;
+        cLeft.gridwidth = 1;
+        cLeft.gridheight = 1;
+        cLeft.gridx = 0;
+        cLeft.gridy = 1;
+        testGBag.add(leftPanel, cLeft);
+
+        leftPanel.setLayout(new GridBagLayout());
+        topPanel.setLayout(new GridBagLayout());
+        JTextField jtf;
+        cLeft.ipady = 0;
+        cLeft.ipadx = 170;
+        for (int i = 0; i < rows; i ++) {
+            jtf = new JTextField();
+            cLeft.gridy = i;
+            leftPanel.add(jtf, cLeft);
+        }
+        cTop.ipady = 100;
+        cTop.ipadx = 14;
+        for (int i = 0; i < cols; i ++) {
+            jtf = new JTextField();
+            cTop.gridx = i;
+            topPanel.add(jtf, cTop);
+        }
+
+
 
     }
 
