@@ -14,14 +14,14 @@ public class PuzzleScreen {
     public static void main(String[] args) {
         //create frame and set attributes
         JFrame puzzleFrame = new JFrame("Nonogram Puzzle Solver");
-        setPuzzleFrameAttr(puzzleFrame, 1024, 768);
+        setPuzzleFrameAttr(puzzleFrame, 1366, 768);
+        addMainPanels(puzzleFrame);
+    }
+
+    public static void addMainPanels(JFrame puzzleFrame) {
         puzzleFrame.getContentPane().add(optionsPanel);
         puzzleFrame.getContentPane().add(puzzlePanel);
-        JButton b = new JButton("OK");
-        optionsPanel.add(b);
         optionsPanel.setBackground(Color.green);
-        JButton b2 = new JButton("Not OK");
-        puzzlePanel.add(b2);
         puzzlePanel.setBackground(Color.red);
     }
 
@@ -34,7 +34,7 @@ public class PuzzleScreen {
     public static void setPuzzleFrameAttr(JFrame fr, int w, int h) {
         fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         fr.pack();
-        fr. getContentPane().setLayout(new FlowLayout());
+        fr. getContentPane().setLayout(new GridLayout(1, 2));
         fr.setVisible(true);
         fr.setLocationRelativeTo(null);
         fr.setSize(w, h);
