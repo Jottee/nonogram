@@ -12,17 +12,36 @@ public class PuzzleScreen {
      * Main method to create window
      */
     public static void main(String[] args) {
-        //create frame and set attributes
+        //create frame and panels
         JFrame puzzleFrame = new JFrame("Nonogram Puzzle Solver");
-        setPuzzleFrameAttr(puzzleFrame, 1366, 768);
         addMainPanels(puzzleFrame);
+
+        //add components
+        JLabel rowLabel = new JLabel("Amount of rows");
+        optionsPanel.add(rowLabel);
+        JTextField rowInput = new JTextField(20);
+        optionsPanel.add(rowInput);
+
+        JLabel colLabel = new JLabel("Amount of rows");
+        optionsPanel.add(colLabel);
+        JTextField colInput = new JTextField(20);
+        optionsPanel.add(colInput);
+
+        //frame init (pack and render)
+        puzzleFrame.pack();
+        setPuzzleFrameAttr(puzzleFrame, 1366, 768);
+        puzzleFrame.setVisible(true);
     }
 
-    public static void addMainPanels(JFrame puzzleFrame) {
-        puzzleFrame.getContentPane().add(optionsPanel);
-        puzzleFrame.getContentPane().add(puzzlePanel);
+    /**
+     * adds the two main panels to the frame, one for the options and one for displaying the puzzle
+     */
+    public static void addMainPanels(JFrame fr) {
+        fr.getContentPane().add(optionsPanel);
+        fr.getContentPane().add(puzzlePanel);
         optionsPanel.setBackground(Color.green);
         puzzlePanel.setBackground(Color.red);
+        optionsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     }
 
     /**
@@ -33,9 +52,7 @@ public class PuzzleScreen {
      */
     public static void setPuzzleFrameAttr(JFrame fr, int w, int h) {
         fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        fr.pack();
-        fr. getContentPane().setLayout(new GridLayout(1, 2));
-        fr.setVisible(true);
+        fr.getContentPane().setLayout(new GridLayout(1, 2));
         fr.setLocationRelativeTo(null);
         fr.setSize(w, h);
     }
