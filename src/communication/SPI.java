@@ -26,8 +26,11 @@ public class SPI {
         for (int i = 0; i < 4; i++) {
             try {
                 spi.write(byte1);
+                Thread.sleep(1000);
             } catch (IOException e) {
                 System.out.println("IOException while writing bytes \n" + e);
+            } catch (InterruptedException e) {
+                System.out.println("InterruptedException while sleeping \n" + e);
             }
         }
 
