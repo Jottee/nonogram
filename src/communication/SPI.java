@@ -19,18 +19,23 @@ public class SPI {
         try {
             spi = SpiFactory.getInstance(SpiChannel.CS0, SpiDevice.DEFAULT_SPI_SPEED, SpiDevice.DEFAULT_SPI_MODE);
         } catch (IOException e) {
-            System.out.println("IOException while creating device \n" + e);
+            console.println("IOException while creating device \n" + e);
         }
 
-        byte byte1 = (byte)0xff;
+        byte[] bytes = new byte[4];
+        bytes[0] = (byte) 0xff;
+        bytes[1] = (byte) 0x0f;
+        bytes[2] = (byte) 0x11;
+        bytes[3] = (byte) 0xe4;
+
         for (int i = 0; i < 4; i++) {
             try {
-                spi.write(byte1);
+                spi.write(bytes[i]);
                 Thread.sleep(1000);
             } catch (IOException e) {
-                System.out.println("IOException while writing bytes \n" + e);
+               console.println("IOException while writing bytes \n" + e);
             } catch (InterruptedException e) {
-                System.out.println("InterruptedException while sleeping \n" + e);
+                console.println("InterruptedException while sleeping \n" + e);
             }
         }
 
