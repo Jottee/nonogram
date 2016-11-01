@@ -4,15 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class PuzzleScreen3 extends JFrame {
+
 
     /**
      * Constructor of the frame, calls createGUI which initializes the elements of the GUI
      */
     public PuzzleScreen3() {
         super("Nonogram Puzzle Solver");
-        createGUI();
+
     }
 
     /**
@@ -31,6 +33,11 @@ public class PuzzleScreen3 extends JFrame {
         puzzlePanel.setBackground(Color.lightGray);
         optionsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
+        //add new panel with GridBagLayout
+        JPanel testGBag = new JPanel(new GridBagLayout());
+        testGBag.setBackground(Color.lightGray);
+        puzzlePanel.add(testGBag);
+        createPuzzleField(puzzlePanel, testGBag, 5, 5);
 
         //Create a simple text input (for testing at the moment) and add actionlistener
         JTextField rowInput = new JTextField(10);
@@ -41,12 +48,11 @@ public class PuzzleScreen3 extends JFrame {
         JButton okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
 
-            @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
                     int rows = Integer.parseInt(rowInput.getText());
                     int cols = Integer.parseInt(colInput.getText());
-                    createPuzzleField(testGBag, rows, cols);
+                    createPuzzleField(puzzlePanel, testGBag, rows, cols);
                     System.out.println("Clicked OK");
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(null, "Not a number");
@@ -54,24 +60,28 @@ public class PuzzleScreen3 extends JFrame {
             }
         });
 
-
         optionsPanel.add(okButton, BorderLayout.CENTER);
 
+        //Change some variables for the frame
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        pack();
+        setVisible(true);
+        setSize(1366, 768);
 
-        // createPuzzleField(testGBag, rows, cols);
+
     }
 
     /**
      * Creates a field of the nonogram with specified size
      *
-     * @param panel panel that the puzzle will be on
+     * @param testGBag panel that the puzzle will be on
      * @param rows  amount of rows
      * @param cols  amount of cols
      */
-    public void createPuzzleField(JPanel panel, int rows, int cols) {
+    public void createPuzzleField(JPanel puzzlePanel, JPanel testGBag, int rows, int cols) {
 
-        //add new panel with GridBagLayout
-        JPanel testGBag = new JPanel(new GridBagLayout());
+        puzzlePanel.removeAll();
+        testGBag = new JPanel(new GridBagLayout());
         testGBag.setBackground(Color.lightGray);
         puzzlePanel.add(testGBag);
 
@@ -89,7 +99,7 @@ public class PuzzleScreen3 extends JFrame {
         cMid.gridy = 1;
         cMid.fill = cMid.BOTH;
         midPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
-        panel.add(midPanel, cMid);
+        testGBag.add(midPanel, cMid);
 
         //set dimensions and settings of top panel
         GridBagConstraints cTop = new GridBagConstraints();
@@ -104,7 +114,7 @@ public class PuzzleScreen3 extends JFrame {
         cTop.gridx = 1;
         cTop.gridy = 0;
         topPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, Color.black));
-        panel.add(topPanel, cTop);
+        testGBag.add(topPanel, cTop);
 
 
         GridBagConstraints cLeft = new GridBagConstraints();
@@ -119,7 +129,7 @@ public class PuzzleScreen3 extends JFrame {
         cLeft.gridx = 0;
         cLeft.gridy = 1;
         leftPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 0, Color.black));
-        panel.add(leftPanel, cLeft);
+        testGBag.add(leftPanel, cLeft);
 
         leftPanel.setLayout(new GridBagLayout());
         topPanel.setLayout(new GridBagLayout());
@@ -148,24 +158,22 @@ public class PuzzleScreen3 extends JFrame {
             label.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
             midPanel.add(label);
         }
+
+        pack();
         setVisible(true);
+        setSize(1366, 768);
     }
 
     public static void main(String[] args) {
-        //Initialize the screen
-        JFrame fr = new PuzzleScreen3();
-        //Change some variables for the frame
-        fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        fr.pack();
-        fr.setVisible(true);
-        fr.setSize(1366, 768);
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                PuzzleScreen3 fr = new PuzzleScreen3();
+                //Initialize the screen
+                fr.createGUI();
+            }
+        });
     }
 
-    public class CreatePuzzleAL implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent actionEvent) {
-        }
-    }
 }
 
