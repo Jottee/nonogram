@@ -5,9 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Arrays;
 
 public class MainFrame extends JFrame {
 
@@ -20,6 +19,7 @@ public class MainFrame extends JFrame {
     private int maxColSize = 0;
     private int rowElements = 0;
     private int colElements = 0;
+    private Map<Integer, JPanel> nonogramField = new HashMap<>();
 
     /**
      * Constructor of the frame, calls createGUI which initializes the elements of the GUI
@@ -107,6 +107,8 @@ public class MainFrame extends JFrame {
         setVisible(true);
         setSize(1366, 768);
 
+        byte[] in = new byte[]{45, 32, 9, 17};
+        drawNonogram(in);
 
     }
 
@@ -167,11 +169,8 @@ public class MainFrame extends JFrame {
             }
             boolean buffer = false;
             if ((i >= rowStart) && (i < colStart)) {
-                //System.out.println("rowbuf");
-                //System.out.println(bytes[i] %maxRowSize);
                 buffer = (bytes[i] == 0) && ((i - rowStart) % maxRowSize != 0);
             } else if ((i >= 4 + (bytes[0] * bytes[1]))) {
-                //System.out.println("colbuf");
                 buffer = (bytes[i] == 0) && ((i - colStart) % maxColSize != 0);
             }
 
@@ -330,7 +329,7 @@ public class MainFrame extends JFrame {
         rowPanel.setLayout(new GridBagLayout());
         colPanel.setLayout(new GridBagLayout());
         JTextField jtf;
-        cRow.ipady = 2;
+        cRow.ipady = 15;
         cRow.ipadx = 170;
         for (int i = 0; i < rows; i++) {
             jtf = new JTextField();
@@ -339,8 +338,8 @@ public class MainFrame extends JFrame {
             rowPanel.add(jtf, cRow);
             rowJTFs.add(jtf);
         }
-        cCol.ipady = 100;
-        cCol.ipadx = 17;
+        cCol.ipady = 130;
+        cCol.ipadx = 30;
         for (int i = 0; i < cols; i++) {
             jtf = new JTextField();
             cCol.gridx = i;
@@ -350,18 +349,45 @@ public class MainFrame extends JFrame {
         }
 
         midPanel.setLayout(new GridLayout(rows, cols));
+        List<Integer> coords = new ArrayList<>();
         for (int i = 0; i < (rows * cols); i++) {
-            final JLabel label = new JLabel("");
-            label.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
-            midPanel.add(label);
+            final JPanel gridPanel = new JPanel();
+            gridPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
+            Random rand = new Random();
+            float r = rand.nextFloat();
+            float g = rand.nextFloat();
+            float b = rand.nextFloat();
+            Color clr = new Color(r, g, b);
+            gridPanel.setBackground(clr);
+            nonogramField.put(i, gridPanel);
+            midPanel.add(gridPanel);
         }
-
-        //System.out.println(rowJTFs.size());
-        //System.out.println(colJTFs.size());
 
         pack();
         setVisible(true);
         setSize(1366, 768);
+    }
+
+    public void drawNonogram(byte[] in) {
+
+        int pos = 0;
+        byte bit = 0;
+
+        for (int i = 0; i < in.length; i++) {
+            for (int j = 0; j <= 6; j++) {
+                while (pos < nonogramField.size()) {
+                    bit = (byte) ((in[i] >> j) & 1);
+                    System.out.println(String.format("%8s",
+                            Integer.toBinaryString(in[i] & 0xFF)).replace(' ', '0'));
+                    if (bit == 1) {
+                        nonogramField.get(pos).setBackground(Color.white);
+                    } else {
+                        nonogramField.get(pos).setBackground(Color.black);
+                    }
+                    pos++;
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
