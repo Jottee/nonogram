@@ -30,7 +30,10 @@ public class SPI {
 
         for (int i = 0; i < 4; i++) {
             try {
-                spi.write(bytes[i]);
+                byte[] in = spi.write(bytes[i]);
+                for (int j = 0; j < in.length; j++) {
+                    System.out.println(String.format("%8s", Integer.toBinaryString(bytes[i] & 0xFF)).replace(' ', '0'));
+                }
                 Thread.sleep(1000);
             } catch (IOException e) {
                console.println("IOException while writing bytes \n" + e);
