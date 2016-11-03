@@ -207,7 +207,7 @@ public class MainFrame extends JFrame {
         maxColSize = 0;
 
         for (JTextField toBIntRow : rowJTFs) {
-            List intsOnOneRow = new ArrayList<Integer>();
+            List<Integer> intsOnOneRow = new ArrayList<Integer>();
             String rowString = toBIntRow.getText();
             rowString = rowString.trim();
             String[] splitRow = rowString.split("\\s+");
@@ -239,7 +239,7 @@ public class MainFrame extends JFrame {
         }
 
         for (JTextField toBIntCol : colJTFs) {
-            List intsOnOneCol = new ArrayList<Integer>();
+            List<Integer> intsOnOneCol = new ArrayList<Integer>();
             String colString = toBIntCol.getText();
             colString = colString.trim();
             String[] splitCol = colString.split("\\s+");
