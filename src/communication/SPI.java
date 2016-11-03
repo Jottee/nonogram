@@ -65,6 +65,7 @@ public class SPI implements Runnable {
         while (console.isRunning()) {
             if (isWaiting) {
                 try {
+                    console.println("isWaiting = true\t\tisReceiving = false\nCurrently waiting for user input");
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     console.println("InterruptedException while sleeping \n" + e);
@@ -72,6 +73,8 @@ public class SPI implements Runnable {
             } else if (!isWaiting){
                 byte[] rec;
                 if (!isReceiving) {
+                    console.println("isWaiting = false\t\tisReceiving = false\n" +
+                            "Currently waiting for FPGA to send 0xff after it finishes computing");
                     try {
                         rec = spi.write(check);
                         if (rec.length >= 1 && rec[0] == 0xff) {
@@ -84,6 +87,8 @@ public class SPI implements Runnable {
                         console.println("InterruptedException while sleeping \n" + e1);
                     }
                 } else if (isReceiving) {
+                    console.println("isWaiting = false\t\tisReceiving = true\n" +
+                            "Currently receiving data and waiting for FPGA to send 0xff once all data is sent");
                     try {
                         rec = spi.write(DUMMY_BYTE);
                         if (rec.length >= 1 && rec[0] == 0xff) {
@@ -92,6 +97,7 @@ public class SPI implements Runnable {
                                 draw[i] = in.get(i);
                             }
                             fr.drawNonogram(draw);
+                            fr.printReceivedByteArray(draw);
                             isReceiving = false;
                             isWaiting = true;
                         } else {
