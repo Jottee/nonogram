@@ -1,7 +1,7 @@
 package GUI;
 
-import communication.SPI;
 import communication.SPI2;
+import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +25,9 @@ public class MainFrame2 extends JFrame {
     private Map<Integer, JPanel> nonogramField = new HashMap<>();
     private SPI2 spi;
     private byte[] out;
+
+    public static int PPW = 1300;
+    public static int PPH = 680;
 
     /**
      * Constructor of the frame, calls createGUI which initializes the elements of the GUI
@@ -74,13 +77,21 @@ public class MainFrame2 extends JFrame {
         optionsPanel.setBackground(Color.gray);
         puzzlePanel.setBackground(Color.lightGray);
         optionsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        puzzlePanel.setLayout(new GridBagLayout());
+        puzzlePanel.setLayout(new BorderLayout());
+
+//        //TEST TODO
+//        final JPanel panel = new JPanel();
+//        panel.setBackground(Color.orange);
+//        panel.setBorder(BorderFactory.createLineBorder(Color.red));
+//        panel.setPreferredSize(new Dimension(800, 600));
 
         //add new panel with GridBagLayout
         final JPanel testGBag = new JPanel(new GridBagLayout());
-        testGBag.setBackground(Color.red);
-        puzzlePanel.add(testGBag);
-        updatePuzzleField(puzzlePanel, testGBag, 5, 5);
+        testGBag.setBackground(Color.lightGray);
+        testGBag.setPreferredSize(new Dimension(1200, 600));
+        final JScrollPane scroll = new JScrollPane(testGBag);
+        puzzlePanel.add(scroll, BorderLayout.CENTER);
+        updatePuzzleField(puzzlePanel, testGBag, scroll, 5, 5);
 
         //Create a simple text input (for testing at the moment) and add actionlistener
         final JTextField rowInput = new JTextField(10);
@@ -95,14 +106,19 @@ public class MainFrame2 extends JFrame {
                 try {
                     int rows = Integer.parseInt(rowInput.getText());
                     int cols = Integer.parseInt(colInput.getText());
-                    updatePuzzleField(puzzlePanel, testGBag, rows, cols);
+                    if (rows <= 50 && cols <= 50) {
+                        updatePuzzleField(puzzlePanel, testGBag, scroll, rows, cols);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Can be no more than 50");
+                    }
+
                     System.out.println("Clicked OK");
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(null, "Not a number");
                 }
             }
         });
-        optionsPanel.add(okButton, BorderLayout.CENTER);
+        optionsPanel.add(okButton);
 
         //Create button to generate list
         final JButton generateButton = new JButton("Generate List");
@@ -330,24 +346,46 @@ public class MainFrame2 extends JFrame {
      * @param rows     amount of rows
      * @param cols     amount of cols
      */
-    private void updatePuzzleField(JPanel puzzlePanel, JPanel testGBag, int rows, int cols) {
+    private void updatePuzzleField(JPanel puzzlePanel, JPanel testGBag, JScrollPane scroll, int rows, int cols) {
 
         puzzlePanel.removeAll();
+        scroll.removeAll();
         testGBag = new JPanel(new GridBagLayout());
         testGBag.setBackground(Color.lightGray);
-        puzzlePanel.add(testGBag);
+        testGBag.setPreferredSize(new Dimension(cols * 30 + 350, rows * 30 + 330));
+        System.out.println((cols * 30 + 200) + " " + (rows * 30 + 250));
+        scroll = new JScrollPane(testGBag);
+        puzzlePanel.add(scroll, BorderLayout.CENTER);
+
+//        puzzlePanel.removeAll();
+//        testGBag = new JPanel(new GridBagLayout());
+//        testGBag.setBackground(Color.lightGray);
+//        puzzlePanel.add(testGBag);
 
         rowJTFs.clear();
         colJTFs.clear();
+        
+        //set dimensions and settings of top left panel
+        GridBagConstraints cTL = new GridBagConstraints();
+        final JPanel tLPanel = new JPanel();
+        tLPanel.setBackground(Color.lightGray);
+        cTL.weightx = 0;
+        cTL.weighty = 0;
+        cTL.gridwidth = 1;
+        cTL.gridheight = 1;
+        cTL.gridx = 0;
+        cTL.gridy = 0;
+        cTL.fill = cTL.BOTH;
+        testGBag.add(tLPanel, cTL);
 
         //set dimensions and settings of mid panel
         GridBagConstraints cMid = new GridBagConstraints();
         final JPanel midPanel = new JPanel();
-        midPanel.setBackground(Color.white);
+        midPanel.setBackground(Color.lightGray);
         cMid.ipady = rows * 17;
         cMid.ipadx = cols * 17;
-        cMid.weightx = 0.0;
-        cMid.weighty = 0.0;
+        cMid.weightx = 0;
+        cMid.weighty = 0;
         cMid.gridwidth = 1;
         cMid.gridheight = 1;
         cMid.gridx = 1;
