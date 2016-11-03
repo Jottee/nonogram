@@ -1,6 +1,7 @@
 package communication;
 
 import GUI.MainFrame;
+import GUI.MainFrame2;
 import com.pi4j.io.spi.SpiChannel;
 import com.pi4j.io.spi.SpiDevice;
 import com.pi4j.io.spi.SpiFactory;
@@ -62,10 +63,11 @@ public class SPI implements Runnable {
             console.println("IOException while creating device \n" + e);
         }
 
+        console.println("isWaiting = true\t\tisReceiving = false\nCurrently waiting for user input");
+
         while (console.isRunning()) {
             if (isWaiting) {
                 try {
-                    console.println("isWaiting = true\t\tisReceiving = false\nCurrently waiting for user input");
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     console.println("InterruptedException while sleeping \n" + e);
@@ -73,12 +75,12 @@ public class SPI implements Runnable {
             } else if (!isWaiting){
                 byte[] rec;
                 if (!isReceiving) {
-                    console.println("isWaiting = false\t\tisReceiving = false\n" +
-                            "Currently waiting for FPGA to send 0xff after it finishes computing");
                     try {
                         rec = spi.write(check);
                         if (rec.length >= 1 && rec[0] == 0xff) {
                             isReceiving = true;
+                            console.println("isWaiting = false\t\tisReceiving = true\n" +
+                                    "Currently receiving data and waiting for FPGA to send 0xff once all data is sent");
                         }
                         Thread.sleep(1000);
                     } catch (IOException e) {
@@ -87,8 +89,6 @@ public class SPI implements Runnable {
                         console.println("InterruptedException while sleeping \n" + e1);
                     }
                 } else if (isReceiving) {
-                    console.println("isWaiting = false\t\tisReceiving = true\n" +
-                            "Currently receiving data and waiting for FPGA to send 0xff once all data is sent");
                     try {
                         rec = spi.write(DUMMY_BYTE);
                         if (rec.length >= 1 && rec[0] == 0xff) {
@@ -100,6 +100,9 @@ public class SPI implements Runnable {
                             fr.printReceivedByteArray(draw);
                             isReceiving = false;
                             isWaiting = true;
+
+                            console.println("isWaiting = true\t\tisReceiving = false\n" +
+                                    "Currently waiting for user input");
                         } else {
                             in.add(rec[0]);
                         }
@@ -120,5 +123,8 @@ public class SPI implements Runnable {
         }
 
         isWaiting = false;
+
+        console.println("isWaiting = false\t\tisReceiving = false\n" +
+                "Currently waiting for FPGA to send 0xff after it finishes computing");
     }
 }
